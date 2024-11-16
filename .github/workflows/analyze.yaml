@@ -1,0 +1,14 @@
+name: Analyze
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
