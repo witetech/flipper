@@ -4,10 +4,7 @@ A collection of GitHub Actions designed to automate and streamline the CI/CD pip
 
 # Installation
 
-To get started, you'll need to copy the necessary files from this repository into your own project. You have two options:
-
-1. Clone this repository and copy the files manually
-2. Run our automated setup script
+To get started, the necessary files from this repository must be copied into the target project. This can be done by either cloning the repository and copying files manually or running the automated setup script.
 
 ```bash
 bash <(curl -sL https://raw.githubusercontent.com/witetech/flipper/main/setup.sh)
