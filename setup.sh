@@ -24,8 +24,7 @@ else
     echo "[INFO] No existing .github folder found. Creating one in $TARGET_DIR..."
 fi
 
-rm -rf "$TARGET_DIR/.github" || error_exit "Failed to remove existing .github folder."
-mv "$TEMP_DIR/.github" "$TARGET_DIR/.github" || error_exit "Failed to move the .github folder to $TARGET_DIR."
+rsync -a --delete "$TEMP_DIR/.github/" "$TARGET_DIR/.github/" || error_exit "Failed to sync the .github folder to $TARGET_DIR."
 
 rm -rf "$TEMP_DIR"
 echo "[INFO] Setup completed successfully. .github folder is now in $TARGET_DIR."
