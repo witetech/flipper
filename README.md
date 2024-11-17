@@ -16,7 +16,7 @@ bash <(curl -sL https://raw.githubusercontent.com/witetech/flipper/main/setup.sh
 
 The analyze workflow performs a static code analysis on the codebase. It checks for potential issues and violations of the Dart and Flutter style guide. It uses the `analysis_options.yaml` file to configure the analysis.
 
-The status of the last run can be seen on the badge:
+By adding the following badge to your README, you can provide a quick overview of the current status of the analysis.
 
 ```
 ![Analyze](https://github.com/OWNER/REPOSITORY/actions/workflows/analyze.yaml/badge.svg)
