@@ -9,3 +9,15 @@ To get started, the necessary files from this repository must be copied into the
 ```bash
 bash <(curl -sL https://raw.githubusercontent.com/witetech/flipper/main/setup.sh)
 ```
+
+# Usage 
+
+## Analyze
+
+The analyze workflow performs a static code analysis on the codebase. It checks for potential issues and violations of the Dart and Flutter style guide. It uses the `analysis_options.yaml` file to configure the analysis.
+
+The status of the last run can be seen on the badge:
+
+```
+![Analyze](https://github.com/OWNER/REPOSITORY/actions/workflows/analyze.yaml/badge.svg)
+```
