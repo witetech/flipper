@@ -35,7 +35,13 @@ for item in "${FILES_TO_MERGE[@]}"; do
     
     # Copy the files/folders
     if [ -e "$TEMP_DIR/$item" ]; then
-        rsync -a "$TEMP_DIR/$item/" "$TARGET_DIR/$item/" || error "Failed to merge $item into $TARGET_DIR"
+        if [ -d "$TEMP_DIR/$item" ]; then
+            # For directories, include trailing slash
+            rsync -a "$TEMP_DIR/$item/" "$TARGET_DIR/$item/" || error "Failed to merge $item into $TARGET_DIR"
+        else
+            # For files, don't use trailing slash
+            rsync -a "$TEMP_DIR/$item" "$TARGET_DIR/$item" || error "Failed to merge $item into $TARGET_DIR"
+        fi
     else
         error "Required item $item not found in downloaded content"
     fi
