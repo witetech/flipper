@@ -1,51 +1,37 @@
 #!/bin/bash
 
+# Repository URL
 REPO_URL="https://github.com/witetech/flipper/archive/main.tar.gz"
+
+# Target directory
 TARGET_DIR="$(pwd)"
 
-error() {
-    echo "[ERROR] $1" >&2
-    exit 1
-}
+# Check if curl is installed
+command -v curl >/dev/null 2>&1 || { echo "curl is not installed" && exit 1; }
 
-command -v curl >/dev/null 2>&1 || error "curl is not installed"
-command -v tar >/dev/null 2>&1 || error "tar is not installed"
+# Check if tar is installed
+command -v tar >/dev/null 2>&1 || { echo "tar is not installed" && exit 1; }
+
+# Check if rsync is installed
+command -v rsync >/dev/null 2>&1 || { echo "rsync is not installed" && exit 1; }
 
 # Define list of files and folders to be merged
-FILES_TO_MERGE=(".github" "test.asd")
+FILES=(".github/" "analysis_options.yaml")
 
-echo "Downloading..."
+# Create the temporary directory
 TEMP_DIR=$(mktemp -d)
-(
-    cd "$TEMP_DIR"
-    # Extract all files/folders from the archive
-    curl -sL "$REPO_URL" | tar xz --strip-components=1 || error "Failed to extract files"
-)
 
-# Process each file/folder in FILES_TO_MERGE
-for item in "${FILES_TO_MERGE[@]}"; do
-    if [ -e "$TARGET_DIR/$item" ]; then
-        echo "Replacing existing $item in $TARGET_DIR..."
-    else
-        echo "No existing $item found. Creating it in $TARGET_DIR..."
-    fi
+# Download the repository to the temporary directory
+curl -sL "$REPO_URL" | tar xz --strip-components=1 -C "$TEMP_DIR" || { echo "Failed to download the repository" && exit 1; }
 
+# Loop through the files and folders to be merged and merge them
+for FILE in "${FILES[@]}"; do
     # Ensure parent directory exists
-    mkdir -p "$(dirname "$TARGET_DIR/$item")"
-    
-    # Copy the files/folders
-    if [ -e "$TEMP_DIR/$item" ]; then
-        if [ -d "$TEMP_DIR/$item" ]; then
-            # For directories, include trailing slash
-            rsync -a "$TEMP_DIR/$item/" "$TARGET_DIR/$item/" || error "Failed to merge $item into $TARGET_DIR"
-        else
-            # For files, don't use trailing slash
-            rsync -a "$TEMP_DIR/$item" "$TARGET_DIR/$item" || error "Failed to merge $item into $TARGET_DIR"
-        fi
-    else
-        error "Required item $item not found in downloaded content"
-    fi
+    mkdir -p "$(dirname "$TARGET_DIR/$FILE")"
+
+    # Copy the files/folders using rsync
+    rsync -a "$TEMP_DIR/$FILE" "$TARGET_DIR/$FILE" || { echo "Failed to merge $FILE into $TARGET_DIR" && exit 1; }
 done
 
+# Remove the temporary directory
 rm -rf "$TEMP_DIR"
-echo "Setup completed successfully."
